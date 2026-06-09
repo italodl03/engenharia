@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Engenharia Estrutural - Cálculos Avançados</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #e0e7f0 0%, #ccd7e6 100%);
+            margin: 0;
+            padding: 24px 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .main-container {
+            max-width: 1400px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 42px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+        .header {
+            background: #0b2b3b;
+            padding: 1.4rem 2rem;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .header h1 span {
+            background: #f39c12;
+            font-size: 1rem;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-weight: 500;
+        }
+        .btn-pdf {
+            background: #c4450c;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-pdf:hover {
+            background: #a53708;
+            transform: scale(1.02);
+        }
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 1rem;
+            gap: 0.5rem;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 1rem 1.6rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: 0.2s;
+            border-radius: 30px 30px 0 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-btn.active {
+            background: white;
+            color: #0f5c6e;
+            border-bottom: 3px solid #f39c12;
+        }
+        .tab-content {
+            display: none;
+            padding: 2rem 1.8rem;
+            background: white;
+            animation: fadeIn 0.25s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .calc-card {
+            background: #fefdf9;
+            border-radius: 28px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            border: 1px solid #ede9e0;
+            margin-bottom: 2rem;
+        }
+        .calc-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f4e5e;
+            border-left: 7px solid #f39c12;
+            padding-left: 18px;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            margin-bottom: 1.8rem;
+            align-items: flex-end;
+        }
+        .input-field {
+            flex: 1;
+            min-width: 150px;
+        }
+        .input-field label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #4b6a7c;
+            margin-bottom: 6px;
+        }
+        .input-field input, .input-field select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cfdfe9;
+            border-radius: 20px;
+            font-size: 1rem;
+            background: white;
+        }
+        button.calc-btn {
+            background: #1f5e6e;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button.calc-btn:hover {
+            background: #0e4452;
+        }
+        .result-area {
+            background: #eef3f7;
+            padding: 1rem 1.5rem;
+            border-radius: 32px;
+            margin-top: 1.2rem;
+            border-left: 6px solid #f39c12;
+        }
+        .result-value {
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #1b4f5e;
+        }
+        .warning {
+            background: #fff1e0;
+            border-left-color: #e67e22;
+        }
+        .small-note {
+            font-size: 0.75rem;
+            color: #5f7e8e;
+            margin-top: 8px;
+        }
+        footer {
+            background: #f2f5f9;
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.75rem;
+            color: #5f7e8e;
+            border-top: 1px solid #e2edf2;
+        }
+        @media (max-width: 680px) {
+            .tab-btn { padding: 0.7rem 1rem; font-size: 0.85rem; }
+            .input-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+<div class="main-container" id="printContainer">
+    <div class="header">
+        <h1>📐 Engenharia Estrutural <span>Pré-dimensionamento + Verificações</span></h1>
+        <button class="btn-pdf" id="exportPdfBtn">📄 Exportar resultados (PDF)</button>
+    </div>
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="escada">📏 ESCADA</button>
+        <button class="tab-btn" data-tab="coluna">🏛️ COLUNA</button>
+        <button class="tab-btn" data-tab="laje">🧱 LAJE</button>
+        <button class="tab-btn" data-tab="viga">📐 VIGA</button>
+        <button class="tab-btn" data-tab="sapata">⚙️ SAPATA</button>
+    </div>
+
+    <!-- ESCADA com verificação normativa -->
+    <div id="escada" class="tab-content active">
+        <div class="calc-card">
+            <h2 class="calc-title">📏 Conforto e segurança (NBR 9077)</h2>
+            <div class="input-group">
+                <div class="input-field"><label>Altura do vão (H) [cm]</label><input type="number" id="escadaH" value="280"></div>
+                <div class="input-field"><label>Número de degraus (n)</label><input type="number" id="escadaN" value="17"></div>
+            </div>
+            <button class="calc-btn" onclick="calcularEscadaCompleta()">Verificar escada</button>
+            <div class="result-area" id="resultEscada">
+                <p>📐 Espelho = <span class="result-value" id="espelhoValor">--</span> cm | Piso = <span id="pisoValor" class="result-value">--</span> cm</p>
+                <p>⚖️ Blondel: <span id="blondelStatus">---</span></p>
+                <p>⚠️ <strong>Limites NBR 9077:</strong> Espelho 16 a 18cm? <span id="limiteEspelho">---</span> | Piso ≥ 28cm? <span id="limitePiso">---</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- COLUNA (já tinha bom, adicionamos verificação de esbeltez) -->
+    <div id="coluna" class="tab-content">
+        <div class="calc-card">
+            <h2 class="calc-title">🏛️ Pilar: carga e verificação de esbeltez</h2>
+            <div class="input-group">
+                <div class="input-field"><label>Área influência (m²)</label><input type="number" id="areaInf" value="12"></div>
+                <div class="input-field"><label>Pavimentos</label><input type="number" id="pavimentos" value="3"></div>
+                <div class="input-field"><label>Carga média (kN/m²)</label><input type="number" id="cargaPav" value="12"></div>
+                <div class="input-field"><label>fck (MPa)</label><input type="number" id="fckCol" value="25"></div>
+                <div class="input-field"><label>Altura livre (cm)</label><input type="number" id="alturaPilar" value="280"></div>
+                <div class="input-field"><label>Seção adotada (cm x cm)</label><input type="text" id="secaoAdotada" placeholder="20x40" value="20x40"></div>
+            </div>
+            <button class="calc-btn" onclick="calcularPilarCompleto()">Dimensionar + esbeltez</button>
+            <div class="result-area" id="resultColuna">
+                <p>📌 Carga total: <span class="result-value" id="cargaTotal">--</span> kN</p>
+                <p>📐 Área necessária: <span class="result-value" id="areaNecessaria">--</span> cm² | Seção sugerida: <span id="sugestaoSecao">---</span></p>
+                <p>📏 Índice de esbeltez (λ): <span id="lambdaPilar" class="result-value">--</span> → <span id="classEsbeltez">---</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- LAJE com armadura mínima -->
+    <div id="laje" class="tab-content">
+        <div class="calc-card">
+            <h2 class="calc-title">🧱 Espessura + armadura mínima de distribuição</h2>
+            <div class="input-group">
+                <div class="input-field"><label>Menor vão (cm)</label><input type="number" id="vãoLaje" value="450"></div>
+                <div class="input-field"><label>Tipo</label><select id="tipoLaje"><option value="simples">Apoiada</option><option value="continua">Contínua</option></select></div>
+                <div class="input-field"><label>fck (MPa)</label><input type="number" id="fckLaje" value="25"></div>
+            </div>
+            <button class="calc-btn" onclick="calcularLajeCompleta()">Calcular espessura + armadura mínima</button>
+            <div class="result-area" id="resultLaje">
+                <p>📏 Espessura útil: <span class="result-value" id="espLaje">--</span> cm | h final: <span id="hFinalLaje">--</span> cm</p>
+                <p>🛡️ <strong>Armadura mínima positiva (As,mín)</strong> = <span class="result-value" id="asMinLaje">--</span> cm²/m (CA-50)</p>
+                <p>🔩 <em>Sugestão: φ 8mm c/ <span id="espacamentoSugerido">--</span> cm</em></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIGA com armadura mínima e momento resistente -->
+    <div id="viga" class="tab-content">
+        <div class="calc-card">
+            <h2 class="calc-title">📐 Viga: momento, cortante e armadura longitudinal mínima</h2>
+            <div class="input-group">
+                <div class="input-field"><label>Vão (m)</label><input type="number" id="vaoViga" value="5.0"></div>
+                <div class="input-field"><label>Carga distribuída (kN/m)</label><input type="number" id="cargaViga" value="15"></div>
+                <div class="input-field"><label>Largura bw (cm)</label><input type="number" id="bwViga" value="14"></div>
+                <div class="input-field"><label>Altura útil d (cm)</label><input type="number" id="dViga" value="35"></div>
+                <div class="input-field"><label>fck (MPa)</label><input type="number" id="fckViga" value="25"></div>
+            </div>
+            <button class="calc-btn" onclick="calcularVigaCompleta()">Calcular esforços + armadura mínima</button>
+            <div class="result-area" id="resultViga">
+                <p>📌 Momento Mk = <span class="result-value" id="momentoViga">--</span> kN.m | Cortante Vk = <span id="cortanteViga">--</span> kN</p>
+                <p>📐 Área de aço mínima (As,mín) = <span class="result-value" id="asMinViga">--</span> cm²</p>
+                <p>⚙️ <strong>As, necessária (estimada)</strong> ≈ <span id="asNecessaria" class="result-value">--</span> cm² → Adotar maior</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SAPATA isolada com verificação simplificada de rigidez -->
+    <div id="sapata" class="tab-content">
+        <div class="calc-card">
+            <h2 class="calc-title">⚙️ Sapata: área e verificação de rigidez</h2>
+            <div class="input-group">
+                <div class="input-field"><label>Carga (kN)</label><input type="number" id="cargaSapata" value="850"></div>
+                <div class="input-field"><label>σ adm solo (kPa)</label><input type="number" id="taxaSolo" value="250"></div>
+            </div>
+            <button class="calc-btn" onclick="calcularSapataCompleta()">Calcular sapata</button>
+            <div class="result-area" id="resultSapata">
+                <p>📐 Área necessária: <span class="result-value" id="areaSapata">--</span> m² | Lado aprox: <span id="ladoSapata">--</span> m</p>
+                <p>⚠️ <strong>Verificação de rigidez:</strong> altura da sapata ≥ <span id="hMinSapata">--</span> cm (para evitar flexão excessiva)</p>
+            </div>
+        </div>
+    </div>
+    <footer>🧪 Resultados com base em NBR 6118/9077 (pré-dimensionamento). Sempre validar com cálculo estrutural definitivo.</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    // ESCADA completa
+    function calcularEscadaCompleta() {
+        let H = parseFloat(document.getElementById('escadaH').value);
+        let n = parseFloat(document.getElementById('escadaN').value);
+        if (isNaN(H) || isNaN(n) || n <= 0) return;
+        let espelho = H / n;
+        let pisoIdeal = 64 - (2 * espelho);
+        let piso = Math.round(pisoIdeal * 10) / 10;
+        espelho = Math.round(espelho * 10) / 10;
+        let blondel = 2 * espelho + piso;
+        let statusBlondel = (blondel >= 63 && blondel <= 65) ? "✅ Dentro da faixa (63-65)" : `⚠️ Fora (${blondel.toFixed(1)} cm)`;
+        let limiteEspelho = (espelho >= 16 && espelho <= 18) ? "✅ ok (16-18cm)" : "❌ Fora do intervalo ideal (16-18cm)";
+        let limitePiso = (piso >= 28) ? "✅ ok (piso ≥28cm)" : "❌ Piso menor que 28cm (recomendado)";
+        document.getElementById('espelhoValor').innerText = espelho;
+        document.getElementById('pisoValor').innerText = piso;
+        document.getElementById('blondelStatus').innerHTML = statusBlondel;
+        document.getElementById('limiteEspelho').innerHTML = limiteEspelho;
+        document.getElementById('limitePiso').innerHTML = limitePiso;
+    }
+
+    // COLUNA com esbeltez
+    function calcularPilarCompleto() {
+        let areaInf = parseFloat(document.getElementById('areaInf').value);
+        let pav = parseFloat(document.getElementById('pavimentos').value);
+        let cargaPav = parseFloat(document.getElementById('cargaPav').value);
+        let fck = parseFloat(document.getElementById('fckCol').value);
+        let alturaLiv = parseFloat(document.getElementById('alturaPilar').value);
+        let secaoStr = document.getElementById('secaoAdotada').value;
+        let partes = secaoStr.split('x');
+        if (partes.length !== 2) return;
+        let bx = parseFloat(partes[0]), by = parseFloat(partes[1]);
+        if (isNaN(bx) || isNaN(by)) return;
+        let cargaTotal = areaInf * pav * cargaPav;
+        let cargaMajorada = cargaTotal * 1.4;
+        let tensaoAdm = fck / 20;
+        let areaNecessaria = cargaMajorada / tensaoAdm;
+        let areaAdotada = bx * by;
+        let sugestao = `${bx}x${by} cm (área ${areaAdotada} cm²) ` + (areaAdotada >= areaNecessaria ? "✅ suficiente" : "⚠️ insuficiente");
+        let raioMin = Math.min(bx, by);
+        let comprimentoFlambagem = alturaLiv; // simplificação
+        let lambda = (comprimentoFlambagem * Math.sqrt(12)) / raioMin;
+        lambda = Math.round(lambda * 10) / 10;
+        let classif = lambda <= 40 ? "Pilar curto" : (lambda <= 90 ? "Pilar medianamente esbelto" : "Pilar esbelto (cuidado!)");
+        document.getElementById('cargaTotal').innerText = cargaTotal.toFixed(1);
+        document.getElementById('areaNecessaria').innerHTML = Math.ceil(areaNecessaria);
+        document.getElementById('sugestaoSecao').innerHTML = sugestao;
+        document.getElementById('lambdaPilar').innerHTML = lambda;
+        document.getElementById('classEsbeltez').innerHTML = classif;
+    }
+
+    // LAJE: espessura + armadura mínima (NBR 6118 - lajes)
+    function calcularLajeCompleta() {
+        let vao = parseFloat(document.getElementById('vãoLaje').value);
+        let tipo = document.getElementById('tipoLaje').value;
+        let rel = tipo === "simples" ? 40 : 42;
+        let dMin = vao / rel;
+        dMin = Math.ceil(dMin * 10) / 10;
+        let hFinal = Math.ceil(dMin + 2.5);
+        let fck = parseFloat(document.getElementById('fckLaje').value);
+        let asMin = (0.15 * (Math.sqrt(fck) / 100) * 100 * (hFinal * 10)) / 100; // taxa mínima 0,15% da seção para CA-50 (simplificado)
+        asMin = asMin * 1.0; // cm²/m
+        asMin = Math.max(asMin, 0.9); // mínimo normativo aproximado 0,9 cm²/m
+        asMin = Math.ceil(asMin * 10) / 10;
+        let bitola = 8; // mm
+        let areaBitola = 0.503; // cm² (φ8mm)
+        let espacamento = (areaBitola / asMin) * 100;
+        espacamento = Math.min(espacamento, 20);
+        espacamento = Math.floor(espacamento);
+        document.getElementById('espLaje').innerHTML = dMin;
+        document.getElementById('hFinalLaje').innerHTML = hFinal;
+        document.getElementById('asMinLaje').innerHTML = asMin;
+        document.getElementById('espacamentoSugerido').innerHTML = espacamento > 0 ? espacamento : 20;
+    }
+
+    // VIGA: armadura mínima e estimativa de As
+    function calcularVigaCompleta() {
+        let L = parseFloat(document.getElementById('vaoViga').value);
+        let q = parseFloat(document.getElementById('cargaViga').value);
+        let bw = parseFloat(document.getElementById('bwViga').value);
+        let d = parseFloat(document.getElementById('dViga').value);
+        let fck = parseFloat(document.getElementById('fckViga').value);
+        if (isNaN(L) || isNaN(q) || isNaN(bw) || isNaN(d)) return;
+        let momento = (q * L * L) / 8;
+        let cortante = (q * L) / 2;
+        let fyk = 500; // MPa
+        let fcd = fck / 1.4; // MPa
+        let AsMin = (0.15 / 100) * bw * d; // 0,15% da seção bruta (mínimo para CA-50)
+        AsMin = Math.max(AsMin, 1.0);
+        AsMin = Math.ceil(AsMin * 10) / 10;
+        let Md = momento * 1.4; // kN.m
+        let MdKNcm = Md * 100;
+        let x = (MdKNcm / (0.68 * bw * fcd / 10));
+        x = Math.min(d * 0.45, x); // limite domínio 2/3
+        let AsNecess = (MdKNcm) / ( (d - 0.4*x) * (fyk/1.15)/10 );
+        if (AsNecess < 0) AsNecess = 0;
+        AsNecess = Math.ceil(AsNecess * 10) / 10;
+        document.getElementById('momentoViga').innerHTML = momento.toFixed(2);
+        document.getElementById('cortanteViga').innerHTML = cortante.toFixed(2);
+        document.getElementById('asMinViga').innerHTML = AsMin;
+        document.getElementById('asNecessaria').innerHTML = AsNecess + ` (${AsNecess > AsMin ? "As,nec maior" : "prevalece As,mín"})`;
+    }
+
+    // SAPATA com verificação de rigidez (altura mínima)
+    function calcularSapataCompleta() {
+        let P = parseFloat(document.getElementById('cargaSapata').value);
+        let solo = parseFloat(document.getElementById('taxaSolo').value);
+        if (isNaN(P) || isNaN(solo) || solo <= 0) return;
+        let area = P / solo;
+        let lado = Math.sqrt(area);
+        lado = Math.ceil(lado * 20) / 20;
+        let hMin = Math.ceil(lado * 0.2 * 100); // sapata rígida: altura mínima 20% do menor lado (cm)
+        hMin = Math.max(hMin, 20);
+        document.getElementById('areaSapata').innerHTML = area.toFixed(2);
+        document.getElementById('ladoSapata').innerHTML = lado;
+        document.getElementById('hMinSapata').innerHTML = hMin;
+    }
+
+    // Exportar PDF com html2pdf
+    function exportarPDF() {
+        const element = document.getElementById('printContainer');
+        const opt = {
+            margin:        [0.7, 0.7, 0.7, 0.7],
+            filename:     'engenharia_relatorio_calculos.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, letterRendering: true },
+            jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(element).save();
+    }
+
+    // Inicialização
+    function init(){
+        document.getElementById('exportPdfBtn').addEventListener('click', exportarPDF);
+        // carregar abas
+        const tabs = document.querySelectorAll('.tab-btn');
+        const contents = document.querySelectorAll('.tab-content');
+        tabs.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
+                contents.forEach(c => c.classList.remove('active'));
+                tabs.forEach(b => b.classList.remove('active'));
+                document.getElementById(tabId).classList.add('active');
+                btn.classList.add('active');
+            });
+        });
+        // calcular todos iniciais
+        calcularEscadaCompleta();
+        calcularPilarCompleto();
+        calcularLajeCompleta();
+        calcularVigaCompleta();
+        calcularSapataCompleta();
+    }
+    window.onload = init;
+</script>
+</body>
+</html>
